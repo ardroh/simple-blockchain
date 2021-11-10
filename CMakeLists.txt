@@ -8,6 +8,10 @@ find_package(OpenSSL REQUIRED)
 set(CMAKE_CXX_STANDARD 14)
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -O0")
 
-add_executable (SimpleCppBlockchain main.cpp Block.cpp Digest.cpp)
+file(GLOB SimpleCppBlockchain_SRC
+    "src/*.cpp"
+)
+
+add_executable (SimpleCppBlockchain ${SimpleCppBlockchain_SRC})
 
 target_link_libraries(SimpleCppBlockchain OpenSSL::SSL)
