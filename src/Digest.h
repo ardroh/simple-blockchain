@@ -9,6 +9,8 @@ public:
   Digest() = default;
   Digest(std::vector<unsigned char> digest);
   std::string getString() const;
+  std::vector<unsigned char> getArray() const;
+  bool compare(const Digest & other) const;
 
 private:
   std::vector<unsigned char> digest_;

@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
     {
         auto newBlock = blockchain->addBlock("transaction" + std::to_string(i));
         std::cout << "\t> " << newBlock.getPreviousDigest().getString() << " -> " << newBlock.getDigest().getString() << std::endl;
+        std::cout << "\t\t> Is chain valid: " << blockchain->verifyChain() << std::endl;
     }
     return 0;
 }

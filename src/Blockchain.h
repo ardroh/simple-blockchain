@@ -8,6 +8,7 @@ public:
 
     Block getLatestBlock() const;
     Block addBlock(std::string data);
+    bool verifyChain() const;
     
 private:
   std::vector<Block> chain_;
