@@ -4,7 +4,7 @@ namespace blockchain {
 Digest::Digest(std::vector<unsigned char> digest)
     : digest_(std::move(digest)) {}
 
-std::string Digest::GetString() const {
+std::string Digest::getString() const {
   auto digestSize = digest_.size();
   char outputBuffer[digestSize * 2 + 1];
   for (auto i = 0; i < digestSize; i++) {

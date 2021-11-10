@@ -1,3 +1,4 @@
+#pragma once
 #include <cstdio>
 #include <vector>
 #include <string>
@@ -7,7 +8,7 @@ class Digest {
 public:
   Digest() = default;
   Digest(std::vector<unsigned char> digest);
-  std::string GetString() const;
+  std::string getString() const;
 
 private:
   std::vector<unsigned char> digest_;
