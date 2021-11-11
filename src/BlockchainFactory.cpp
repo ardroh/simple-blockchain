@@ -1,10 +1,9 @@
 #include "BlockchainFactory.h"
 #include "Block.h"
-#include "BlockFactory.h"
 
 namespace blockchain {
-std::unique_ptr<Blockchain> BlockchainFactory::create() {
-  Block genesisBlock = BlockFactory::create(0, "Genesis block", {});
-  return std::make_unique<Blockchain>(genesisBlock);
+std::unique_ptr<Blockchain> BlockchainFactory::create(unsigned difficulty) {
+  Block genesisBlock = Block(0, 0, "Genesis block", {}, {}, 0ull);
+  return std::make_unique<Blockchain>(genesisBlock, difficulty);
 }
 } // namespace blockchain
