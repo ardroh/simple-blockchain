@@ -1,6 +1,7 @@
 #include "Blockchain.h"
 #include "DigestCalculator.h"
 #include <chrono>
+#include <numeric>
 
 namespace blockchain {
 Blockchain::Blockchain(Block genesisBlock_, unsigned difficulty)
@@ -10,7 +11,7 @@ Blockchain::Blockchain(Block genesisBlock_, unsigned difficulty)
 
 Block Blockchain::getLatestBlock() const { return chain_[chain_.size() - 1]; }
 
-void Blockchain::minePendingTransactions(const std::string & rewardAddress) {
+void Blockchain::minePendingTransactions(const std::string &rewardAddress) {
   std::unique_lock<std::mutex> lock(pendingTransactionsMutex_);
   auto &lastBlock = chain_.back();
   std::time_t timestamp = std::time(nullptr);
@@ -40,11 +41,15 @@ void Blockchain::minePendingTransactions(const std::string & rewardAddress) {
 
   auto digest = optDigest.value();
 
-
-  auto newBlock = Block(timestamp, pendingTransactions_,
-                        lastBlock.getDigest(), digest, nounce);
+  auto newBlock = Block(timestamp, pendingTransactions_, lastBlock.getDigest(),
+                        digest, nounce);
   chain_.emplace_back(newBlock);
-  pendingTransactions_.push_back({{}, rewardAddress, 100.0});
+  auto rewardSum = std::accumulate(std::begin(pendingTransactions_),
+                                   std::end(pendingTransactions_), 0.0,
+                                   [](double sum, const Transaction &trans) {
+                                     return sum + trans.getReward();
+                                   });
+  pendingTransactions_.push_back({{}, rewardAddress, rewardSum, 0.0});
 }
 
 bool Blockchain::verifyChain() const {
@@ -78,7 +83,7 @@ double Blockchain::getAmountOfAddress(const std::string &address) const {
       if (trans.getFromAddress().compare(address) == 0) {
         balance -= trans.getAmount();
       } else if (trans.getToAddress().compare(address) == 0) {
-        balance += trans.getAmount();
+        balance += trans.getAmount() - trans.getReward();
       }
     }
   }
