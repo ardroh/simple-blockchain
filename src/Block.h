@@ -1,27 +1,27 @@
 #pragma once
 #include "Digest.h"
+#include "Transaction.h"
 #include <array>
 #include <string>
+#include <vector>
 
 namespace blockchain {
 class Block {
 public:
-  Block(int index, std::time_t timestamp, std::string data,
+  Block(std::time_t timestamp, std::vector<Transaction> transactions,
         Digest previousDigest, Digest currentDigest, unsigned long long nounce);
   ~Block() = default;
 
-  int getIndex() const;
   std::time_t getTimestamp() const;
-  std::string getData() const;
+  std::vector<Transaction> getTransactions() const;
   Digest getDigest() const;
   Digest getPreviousDigest() const;
   unsigned long long getNounce() const;
   void setNounce(unsigned long long newNounce);
 
 private:
-  int index_;
   std::time_t timestamp_;
-  std::string data_;
+  std::vector<Transaction> transactions_;
   Digest digest_;
   Digest previousDigest_;
   unsigned long long nounce_;
