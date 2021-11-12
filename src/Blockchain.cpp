@@ -1,5 +1,6 @@
 #include "Blockchain.h"
 #include "DigestCalculator.h"
+#include <cassert>
 #include <chrono>
 #include <numeric>
 
@@ -31,9 +32,11 @@ void Blockchain::minePendingTransactions(const std::string &rewardAddress) {
     nounce++;
   }
   auto endT = std::chrono::high_resolution_clock::now();
-  printf("Took: %lld ms\n",
-         std::chrono::duration_cast<std::chrono::milliseconds>(endT - startT)
-             .count());
+  printf(
+      "Took: %lld ms\n",
+      static_cast<long long int>(
+          std::chrono::duration_cast<std::chrono::milliseconds>(endT - startT)
+              .count()));
   if (!optDigest.has_value()) {
     assert(false);
     return;
