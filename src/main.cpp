@@ -1,4 +1,5 @@
 #include "BlockchainFactory.h"
+#include "OpenSSLKeyGenerator.h"
 #include <ctime>
 #include <iostream>
 
@@ -12,9 +13,16 @@ int main(int argc, char *argv[]) {
   blockchain->addNewTransaction({"address1", "address2", 10, 1});
   blockchain->addNewTransaction({"address2", "address1", 10, 1});
   blockchain->minePendingTransactions("abc");
-  std::cout << "address2 balance: " << blockchain->getAmountOfAddress("address2") << std::endl;
-  std::cout << "address1 balance: " << blockchain->getAmountOfAddress("address1") << std::endl;
+  std::cout << "address2 balance: "
+            << blockchain->getAmountOfAddress("address2") << std::endl;
+  std::cout << "address1 balance: "
+            << blockchain->getAmountOfAddress("address1") << std::endl;
   blockchain->minePendingTransactions("abc");
-  std::cout << "abc balance: " << blockchain->getAmountOfAddress("abc") << std::endl;
+  std::cout << "abc balance: " << blockchain->getAmountOfAddress("abc")
+            << std::endl;
+  blockchain::OpenSSLKeyGenerator keyGenerator;
+  auto keys = keyGenerator.generateKeys();
+  std::cout << "Pub: " << keys.publicKey << " Priv: " << keys.privateKey
+            << std::endl;
   return 0;
 }
