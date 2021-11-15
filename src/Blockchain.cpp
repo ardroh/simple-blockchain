@@ -20,9 +20,9 @@ void Blockchain::minePendingTransactions(const std::string &rewardAddress) {
   std::optional<Digest> optDigest;
   auto startT = std::chrono::high_resolution_clock::now();
   while (true) {
+    auto tempBlock = Block(timestamp, pendingTransactions_, lastBlock.getDigest(), {}, nounce);
     auto digest =
-        DigestCalculator::calculate(lastBlock.getDigest().getString(),
-                                    timestamp, pendingTransactions_, nounce);
+        DigestCalculator::calculate(tempBlock.getString());
     if (digest.getString().compare(0, expectedDigestPrefix_.size(),
                                    expectedDigestPrefix_) == 0) {
       optDigest = digest;
@@ -60,10 +60,8 @@ bool Blockchain::verifyChain() const {
     auto currentBlock = this->chain_[i];
     auto previousBlock = this->chain_[i - 1];
 
-    if (!currentBlock.getDigest().compare(DigestCalculator::calculate(
-            currentBlock.getPreviousDigest().getString(),
-            currentBlock.getTimestamp(), currentBlock.getTransactions(),
-            currentBlock.getNounce()))) {
+    if (!currentBlock.getDigest().compare(
+            DigestCalculator::calculate(currentBlock.getString())) != 0) {
       return false;
     }
 

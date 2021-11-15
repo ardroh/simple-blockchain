@@ -19,6 +19,7 @@ public:
   Digest getPreviousDigest() const;
   unsigned long long getNounce() const;
   void setNounce(unsigned long long newNounce);
+  std::string getString() const;
 
 private:
   std::time_t timestamp_;
