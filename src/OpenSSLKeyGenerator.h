@@ -6,6 +6,6 @@ namespace blockchain
     class OpenSSLKeyGenerator: public IKeyGenerator {
     public:
         ~OpenSSLKeyGenerator() override = default;
-        RSAKeyPair generateKeys();
+        KeyPair generateKeys() override;
     };
 } // namespace blockchain
