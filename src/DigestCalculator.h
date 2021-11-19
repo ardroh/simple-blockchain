@@ -1,6 +1,7 @@
 #pragma once
 #include "Digest.h"
 #include "Transaction.h"
+#include <ctime>
 #include <vector>
 
 namespace blockchain {
