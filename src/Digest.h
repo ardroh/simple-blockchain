@@ -8,6 +8,7 @@ class Digest {
 public:
   Digest() = default;
   Digest(std::vector<unsigned char> digest);
+  Digest(const std::string & strDigest);
   std::string getString() const;
   std::vector<unsigned char> getArray() const;
   bool compare(const Digest & other) const;

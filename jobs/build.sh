@@ -11,7 +11,8 @@ mkdir -p "$workspace/build"
 pushd "$workspace/build"
 
 if [[ "$2" == "clean" ]]; then
-    cmake ..
+    cmake .. -DCMAKE_BUILD_TYPE=Debug
 fi
+
 
 make
