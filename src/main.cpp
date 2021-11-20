@@ -21,8 +21,8 @@ int main(int argc, char *argv[]) {
   std::cout << "abc balance: " << blockchain->getAmountOfAddress("abc")
             << std::endl;
   blockchain::OpenSSLKeyGenerator keyGenerator;
-  auto keys = keyGenerator.generateKeys();
-  std::cout << "Pub: " << keys.publicKey << " Priv: " << keys.privateKey
+  auto keys = keyGenerator.generateKeys("abc");
+  std::cout << "Pub:\n" << keys.publicKey << " Priv:\n" << keys.privateKey
             << std::endl;
   return 0;
 }

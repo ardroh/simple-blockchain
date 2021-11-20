@@ -11,12 +11,11 @@ std::optional<Digest> RSAMessageSinger::Sign(const std::string &message,
   BIO *keybio = BIO_new_mem_buf((void *)cPrivateKey, -1);
   if (keybio == nullptr) {
     return {};
-  }
-  rsa = PEM_read_bio_RSAPrivateKey(keybio, &rsa, nullptr, nullptr);
+  } 
 
   EVP_MD_CTX *rsaSignCtx = EVP_MD_CTX_new();
   EVP_PKEY *priKey = EVP_PKEY_new();
-  EVP_PKEY_assign_RSA(priKey, rsa);
+  PEM_read_bio_PrivateKey(keybio, &priKey, 0,  0);
   if (EVP_DigestSignInit(rsaSignCtx, NULL, EVP_sha256(), NULL, priKey) <= 0) {
     return {};
   }

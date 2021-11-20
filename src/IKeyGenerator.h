@@ -11,6 +11,6 @@ public:
     std::string privateKey;
   };
   virtual ~IKeyGenerator() = default;
-  virtual KeyPair generateKeys() = 0;
+  virtual KeyPair generateKeys(const std::string & password) = 0;
 };
 } // namespace blockchain
