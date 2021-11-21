@@ -5,10 +5,13 @@
 #include <vector>
 
 namespace blockchain {
-class IMessagesSigner {
+class IMessageSigner {
 public:
-  virtual ~IMessagesSigner() = default;
+  virtual ~IMessageSigner() = default;
   virtual std::optional<Digest> Sign(const std::string &message,
-                                     const std::string &privateKey) = 0;
+                                     const std::string &privateKey,
+                                     const std::string &keyPassword) = 0;
+  virtual bool Verify(const std::string &message, const std::string &publicKey,
+                      const Digest &signature) = 0;
 };
 } // namespace blockchain

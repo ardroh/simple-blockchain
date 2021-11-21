@@ -1,11 +1,16 @@
 #include "OpenSSLKeyGenerator.h"
+#include <array>
 #include <openssl/pem.h>
 #include <openssl/rsa.h>
 #include <vector>
-#include <array>
 
 namespace blockchain {
-IKeyGenerator::KeyPair OpenSSLKeyGenerator::generateKeys(const std::string & password) {
+IKeyGenerator::KeyPair
+OpenSSLKeyGenerator::generateKeys(const std::string &password) {
+  if (password.empty()) {
+    return {};
+  }
+
   auto primes = 3u;
   auto keyLength = 2048u;
   // Generate keys
@@ -20,13 +25,16 @@ IKeyGenerator::KeyPair OpenSSLKeyGenerator::generateKeys(const std::string & pas
   EVP_PKEY_generate(pctx, &pkey);
   EVP_PKEY_CTX_free(pctx);
 
-  //Write keys to BIO's
+  // Write keys to BIO's
   auto bioPublic = BIO_new(BIO_s_mem());
   PEM_write_bio_PUBKEY(bioPublic, pkey);
   auto bioPrivate = BIO_new(BIO_s_mem());
-  PEM_write_bio_PrivateKey(bioPrivate, pkey, EVP_des_ede3_cbc(), reinterpret_cast<const unsigned char*>(password.c_str()), password.length(), 0, NULL);
+  PEM_write_bio_PrivateKey(
+      bioPrivate, pkey, EVP_des_ede3_cbc(),
+      reinterpret_cast<const unsigned char *>(password.c_str()),
+      password.length(), 0, NULL);
 
-  //Stringify the keys
+  // Stringify the keys
   std::vector<unsigned char> public_key, private_key;
   auto pub_len = BIO_pending(bioPublic);
   public_key.resize(pub_len + 1);
