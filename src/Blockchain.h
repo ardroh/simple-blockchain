@@ -14,8 +14,8 @@ public:
   Block getLatestBlock() const;
   void minePendingTransactions(const std::string &rewardAddress);
   bool verifyChain() const;
-  void addNewTransaction(Transaction transaction);
-  double getAmountOfAddress(const std::string & address) const;
+  bool addNewTransaction(Transaction transaction);
+  double getAmountOfAddress(const std::string &address) const;
 
 private:
   std::vector<Block> chain_;

@@ -7,9 +7,6 @@
 namespace blockchain {
 class DigestCalculator {
 public:
-  static Digest calculate(const std::string &previousDigest,
-                          std::time_t timestamp,
-                          const std::vector<Transaction> &transactions,
-                          unsigned long long nounce);
+  static Digest calculate(const std::string & message);
 };
 } // namespace blockchain

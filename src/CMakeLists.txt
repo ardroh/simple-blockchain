@@ -1,7 +1,5 @@
 set(BINARY ${CMAKE_PROJECT_NAME})
 
-find_package(OpenSSL REQUIRED)
-
 file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
 set(SOURCES ${SOURCES})
 
