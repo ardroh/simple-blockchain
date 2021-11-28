@@ -26,8 +26,6 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  blockchain->addNewTransaction(
-      {account2Keys.publicKey, account1Keys.publicKey, 1, 0.1});
   blockchain->minePendingTransactions(account1Keys.publicKey);
   std::cout << "address2 balance: "
             << blockchain->getAmountOfAddress(account2Keys.publicKey)
