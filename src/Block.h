@@ -8,9 +8,12 @@
 
 namespace blockchain {
 class Block {
+private:
+  static const char kStrDelim = ';';
+
 public:
   Block(std::time_t timestamp, std::vector<Transaction> transactions,
-        Digest previousDigest, Digest currentDigest, unsigned long long nounce);
+        Digest previousDigest, unsigned long long nounce);
   ~Block() = default;
 
   std::time_t getTimestamp() const;
@@ -20,6 +23,7 @@ public:
   unsigned long long getNounce() const;
   void setNounce(unsigned long long newNounce);
   std::string getString() const;
+  std::string getHash() const;
 
 private:
   std::time_t timestamp_;

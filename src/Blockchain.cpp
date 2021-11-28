@@ -17,15 +17,14 @@ void Blockchain::minePendingTransactions(const std::string &rewardAddress) {
   auto &lastBlock = chain_.back();
   std::time_t timestamp = std::time(nullptr);
   auto nounce = 0ull;
-  std::optional<Digest> optDigest;
+  std::optional<Block> optBlock;
   auto startT = std::chrono::high_resolution_clock::now();
   while (true) {
-    auto tempBlock = Block(timestamp, pendingTransactions_, lastBlock.getDigest(), {}, nounce);
-    auto digest =
-        DigestCalculator::calculate(tempBlock.getString());
-    if (digest.getString().compare(0, expectedDigestPrefix_.size(),
-                                   expectedDigestPrefix_) == 0) {
-      optDigest = digest;
+    auto tempBlock =
+        Block(timestamp, pendingTransactions_, lastBlock.getDigest(), nounce);
+    if (tempBlock.getDigest().getString().compare(
+            0, expectedDigestPrefix_.size(), expectedDigestPrefix_) == 0) {
+      optBlock = tempBlock;
       break;
     }
 
@@ -33,19 +32,17 @@ void Blockchain::minePendingTransactions(const std::string &rewardAddress) {
   }
   auto endT = std::chrono::high_resolution_clock::now();
   printf(
-      "Took: %lld ms\n",
+      "Mining took: %lld ms\n",
       static_cast<long long int>(
           std::chrono::duration_cast<std::chrono::milliseconds>(endT - startT)
               .count()));
-  if (!optDigest.has_value()) {
+  if (!optBlock.has_value()) {
     assert(false);
     return;
   }
 
-  auto digest = optDigest.value();
+  auto newBlock = optBlock.value();
 
-  auto newBlock = Block(timestamp, pendingTransactions_, lastBlock.getDigest(),
-                        digest, nounce);
   chain_.emplace_back(newBlock);
   auto rewardSum = std::accumulate(std::begin(pendingTransactions_),
                                    std::end(pendingTransactions_), 0.0,
@@ -72,9 +69,18 @@ bool Blockchain::verifyChain() const {
   return true;
 }
 
-void Blockchain::addNewTransaction(Transaction transaction) {
+bool Blockchain::addNewTransaction(Transaction transaction) {
+  if (!transaction.verify()) {
+    return false; // incorrect signature or not signed
+  }
+
+  auto srcAmount = getAmountOfAddress(transaction.getFromAddress());
+  if (srcAmount < transaction.getAmount() + transaction.getReward()) {
+    return false;
+  }
   std::unique_lock<std::mutex> lock(pendingTransactionsMutex_);
   pendingTransactions_.emplace_back(std::move(transaction));
+  return true;
 }
 
 double Blockchain::getAmountOfAddress(const std::string &address) const {
